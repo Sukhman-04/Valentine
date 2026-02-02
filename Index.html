@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Be My Valentine?</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="container">
+    <h1 class="header_text">Will you be my Valentine? 💕</h1>
+
+    <div class="gif_container">
+      <img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif" alt="cute gif" />
+    </div>
+
+    <div class="buttons">
+      <button class="btn" id="yesButton" onclick="nextPage()">Yes 💖</button>
+      <button class="btn" id="noButton" onmouseover="moveButton()" onclick="moveButton()">No 😢</button>
+    </div>
+  </div>
+
+  <script>
+    function nextPage() {
+      window.location.href = "yes.html";
+    }
+
+    function moveButton() {
+      const button = document.getElementById("noButton");
+
+      const x = Math.random() * (window.innerWidth - button.offsetWidth - 20);
+      const y = Math.random() * (window.innerHeight - button.offsetHeight - 20);
+
+      button.style.left = `${x}px`;
+      button.style.top = `${y}px`;
+    }
+  </script>
+</body>
+</html>
