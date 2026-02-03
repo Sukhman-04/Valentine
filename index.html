@@ -1,39 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Be My Valentine?</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<title>Be My Valentine 💘</title>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <div class="container">
-    <h1 class="header_text">Will you be my Valentine? 💕</h1>
 
-    <div class="gif_container">
-      <img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif" alt="cute gif" />
-    </div>
+<div class="hearts"></div>
 
-    <div class="buttons">
-      <button class="btn" id="yesButton" onclick="nextPage()">Yes 💖</button>
-      <button class="btn" id="noButton" onmouseover="moveButton()" onclick="moveButton()">No 😢</button>
-    </div>
+<div class="container">
+  <h1 class="header_text">Will you be my Valentine? 💗</h1>
+
+  <div class="gif_container">
+    <img src="https://media.tenor.com/4fXQxwG1X3UAAAAC/cute-love.gif">
   </div>
 
-  <script>
-    function nextPage() {
-      window.location.href = "yes.html";
-    }
+  <div class="buttons">
+    <button class="btn yes" onclick="nextPage()">Yes 💖</button>
+    <button class="btn no" id="noButton" onmouseover="moveButton()" onclick="moveButton()">No 😢</button>
+  </div>
+</div>
 
-    function moveButton() {
-      const button = document.getElementById("noButton");
+<script>
+function nextPage() {
+  window.location.href = "yes.html";
+}
 
-      const x = Math.random() * (window.innerWidth - button.offsetWidth - 20);
-      const y = Math.random() * (window.innerHeight - button.offsetHeight - 20);
+function moveButton() {
+  const btn = document.getElementById("noButton");
+  const x = Math.random() * (window.innerWidth - btn.offsetWidth - 20);
+  const y = Math.random() * (window.innerHeight - btn.offsetHeight - 20);
+  btn.style.left = x + "px";
+  btn.style.top = y + "px";
+}
+</script>
 
-      button.style.left = `${x}px`;
-      button.style.top = `${y}px`;
-    }
-  </script>
 </body>
 </html>
