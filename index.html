@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Valentine Experience 💘</title>
+<title>Valentine 💘</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
@@ -11,38 +11,18 @@
 body{
   height:100vh;
   overflow:hidden;
-  background:linear-gradient(270deg,#ff9acb,#ff5fa2,#ff2f7f,#ff9acb);
-  background-size:600% 600%;
-  animation:bg 12s ease infinite;
+  background:#120012;
   display:flex;
   justify-content:center;
   align-items:center;
   color:white;
 }
 
-@keyframes bg{
-  0%{background-position:0% 50%}
-  50%{background-position:100% 50%}
-  100%{background-position:0% 50%}
-}
-
-/* glass card */
-
-.card{
-  backdrop-filter:blur(20px);
-  background:rgba(255,255,255,0.12);
-  border-radius:24px;
-  padding:40px;
-  text-align:center;
-  box-shadow:0 0 40px rgba(255,0,120,0.4);
-  transition:1s;
-}
-
-/* neon glow text */
+/* neon glow aesthetic */
 
 .glow{
   text-shadow:
-  0 0 10px #fff,
+  0 0 10px #ff2f7f,
   0 0 20px #ff2f7f,
   0 0 40px #ff2f7f;
 }
@@ -51,14 +31,16 @@ body{
   position:absolute;
   inset:0;
   display:flex;
+  flex-direction:column;
   justify-content:center;
   align-items:center;
+  text-align:center;
   transition:1s;
 }
 
-.hidden{opacity:0;pointer-events:none;transform:scale(.95);}
+.hidden{opacity:0;pointer-events:none;}
 
-h1{font-size:42px;margin-bottom:20px;}
+h1{font-size:44px;margin-bottom:20px;}
 
 button{
   padding:16px 34px;
@@ -68,15 +50,17 @@ button{
   cursor:pointer;
   font-weight:bold;
   margin:10px;
-  background:white;
-  color:#ff2f7f;
-  box-shadow:0 0 20px white;
+  background:#ff2f7f;
+  color:white;
+  box-shadow:0 0 20px #ff2f7f;
   transition:.3s;
 }
 
-button:hover{transform:scale(1.1)}
+button:hover{transform:scale(1.1);}
 
-canvas{position:fixed;inset:0;pointer-events:none;z-index:-1}
+#yes{background:white;color:#ff2f7f}
+
+canvas{position:fixed;inset:0;pointer-events:none}
 </style>
 </head>
 
@@ -84,119 +68,103 @@ canvas{position:fixed;inset:0;pointer-events:none;z-index:-1}
 
 <!-- intro -->
 <div class="screen" id="intro">
-  <div class="card">
-    <h1 class="glow">Tap to open 💌</h1>
-    <button onclick="openIntro()">Open</button>
-  </div>
+  <h1 class="glow">Tap to open message 💌</h1>
+  <button onclick="openIntro()">Open</button>
 </div>
 
 <!-- question -->
 <div class="screen hidden" id="question">
-  <div class="card">
-    <h1 id="qText" class="glow">Will you be my Valentine? 💘</h1>
-    <button id="yes">Yes 💗</button>
-    <button id="no">No 😢</button>
-  </div>
+  <h1 id="qText" class="glow">Will you be my Valentine? 💘</h1>
+  <button id="yes">Yes 💗</button>
+  <button id="no">No 😢</button>
 </div>
 
 <!-- celebration -->
 <div class="screen hidden" id="celebrate">
-  <div class="card">
-    <h1 class="glow">She said YES 💞</h1>
-    <div id="typed" style="font-size:24px;margin-top:20px"></div>
-  </div>
+  <h1 class="glow">YAAAAAY 💘</h1>
+  <div id="typed" style="font-size:26px;margin-top:20px"></div>
 </div>
 
 <canvas id="petals"></canvas>
 
 <audio id="music" loop>
-<source src="https://cdn.pixabay.com/audio/2022/10/25/audio_946d9c4b3c.mp3">
+<source src="https://cdn.pixabay.com/download/audio/2023/03/30/audio_8c8e2e9b6e.mp3">
 </audio>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
-const intro=document.getElementById("intro");
-const question=document.getElementById("question");
-const celebrate=document.getElementById("celebrate");
-const music=document.getElementById("music");
+const intro = document.getElementById("intro");
+const question = document.getElementById("question");
+const celebrate = document.getElementById("celebrate");
+const music = document.getElementById("music");
 
-/* intro */
+/* intro reveal + guaranteed music unlock */
 
 function openIntro(){
-  music.volume=0.6;
-  music.play().catch(()=>{});
+  music.play().catch(()=>{}); // unlock audio
   intro.classList.add("hidden");
   question.classList.remove("hidden");
 }
 
-/* growing yes */
+/* growing yes mechanic */
 
 let scale=1;
 const yes=document.getElementById("yes");
 const no=document.getElementById("no");
 const qText=document.getElementById("qText");
 
-const msgs=[
-"Are you sure? 🥺",
-"I'll be sad 💔",
-"Please? 💕",
-"Last chance 😳",
-"My heart depends on this 💗"
-];
-
+const msgs=["Are you sure? 🥺","Think again 💔","I'll cry 😢","Please? 💕","Last chance 😳"];
 let step=0;
 
 no.onclick=()=>{
-  scale+=0.35;
+  scale+=0.3;
   yes.style.transform=`scale(${scale})`;
   if(step<msgs.length) qText.innerText=msgs[step++];
 };
+
+/* celebration */
 
 yes.onclick=()=>{
   question.classList.add("hidden");
   celebrate.classList.remove("hidden");
 
-  confetti({particleCount:400,spread:180});
+  confetti({particleCount:300,spread:150});
 
-  const msg="You just unlocked infinite love mode 💘✨";
+  const message="You just made my heart glow brighter than neon 💗";
   let i=0;
   function type(){
-    if(i<msg.length){
-      document.getElementById("typed").innerHTML+=msg[i++];
+    if(i<message.length){
+      document.getElementById("typed").innerHTML+=message[i++];
       setTimeout(type,40);
     }
   }
   type();
 };
 
-/* rose petals engine */
+/* falling heart petals */
 
 const canvas=document.getElementById("petals");
 const ctx=canvas.getContext("2d");
-
-function resize(){
-  canvas.width=innerWidth;
-  canvas.height=innerHeight;
-}
-resize();
-onresize=resize;
+canvas.width=innerWidth;
+canvas.height=innerHeight;
 
 let petals=[];
-for(let i=0;i<100;i++){
+for(let i=0;i<60;i++){
   petals.push({
     x:Math.random()*canvas.width,
     y:Math.random()*canvas.height,
-    r:Math.random()*8+4,
-    v:Math.random()*1+0.3,
-    d:Math.random()*2-1
+    s:Math.random()*8+4,
+    v:Math.random()*1+0.5
   });
 }
 
-function drawPetal(p){
-  ctx.fillStyle="rgba(255,20,120,0.9)";
+function heart(x,y,s){
+  ctx.fillStyle="rgba(255,100,150,0.6)";
   ctx.beginPath();
-  ctx.ellipse(p.x,p.y,p.r,p.r*0.6,Math.PI/4,0,Math.PI*2);
+  ctx.moveTo(x,y);
+  ctx.bezierCurveTo(x-s,y-s,x-2*s,y+s,x,y+2*s);
+  ctx.bezierCurveTo(x+2*s,y+s,x+s,y-s,x,y);
   ctx.fill();
 }
 
@@ -204,14 +172,18 @@ function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   petals.forEach(p=>{
     p.y+=p.v;
-    p.x+=p.d;
     if(p.y>canvas.height)p.y=0;
-    if(p.x>canvas.width)p.x=0;
-    drawPetal(p);
+    heart(p.x,p.y,p.s);
   });
   requestAnimationFrame(animate);
 }
+
 animate();
+
+onresize=()=>{
+  canvas.width=innerWidth;
+  canvas.height=innerHeight;
+};
 </script>
 
 </body>
