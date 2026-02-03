@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Valentine 💘</title>
+<title>Valentine Experience 💘</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
@@ -11,14 +11,34 @@
 body{
   height:100vh;
   overflow:hidden;
-  background:linear-gradient(135deg,#ff9acb,#ff5fa2,#ff2f7f);
+  background:linear-gradient(270deg,#ff9acb,#ff5fa2,#ff2f7f,#ff9acb);
+  background-size:600% 600%;
+  animation:bg 12s ease infinite;
   display:flex;
   justify-content:center;
   align-items:center;
   color:white;
 }
 
-/* neon pink glow */
+@keyframes bg{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+/* glass card */
+
+.card{
+  backdrop-filter:blur(20px);
+  background:rgba(255,255,255,0.12);
+  border-radius:24px;
+  padding:40px;
+  text-align:center;
+  box-shadow:0 0 40px rgba(255,0,120,0.4);
+  transition:1s;
+}
+
+/* neon glow text */
 
 .glow{
   text-shadow:
@@ -31,16 +51,14 @@ body{
   position:absolute;
   inset:0;
   display:flex;
-  flex-direction:column;
   justify-content:center;
   align-items:center;
-  text-align:center;
   transition:1s;
 }
 
-.hidden{opacity:0;pointer-events:none;}
+.hidden{opacity:0;pointer-events:none;transform:scale(.95);}
 
-h1{font-size:44px;margin-bottom:20px;}
+h1{font-size:42px;margin-bottom:20px;}
 
 button{
   padding:16px 34px;
@@ -52,37 +70,45 @@ button{
   margin:10px;
   background:white;
   color:#ff2f7f;
-  box-shadow:0 0 20px #fff;
+  box-shadow:0 0 20px white;
   transition:.3s;
 }
 
-button:hover{transform:scale(1.1);}
+button:hover{transform:scale(1.1)}
 
-canvas{position:fixed;inset:0;pointer-events:none}
+canvas{position:fixed;inset:0;pointer-events:none;z-index:-1}
 </style>
 </head>
 
 <body>
 
+<!-- intro -->
 <div class="screen" id="intro">
-  <h1 class="glow">Tap to open message 💌</h1>
-  <button onclick="openIntro()">Open</button>
+  <div class="card">
+    <h1 class="glow">Tap to open 💌</h1>
+    <button onclick="openIntro()">Open</button>
+  </div>
 </div>
 
+<!-- question -->
 <div class="screen hidden" id="question">
-  <h1 id="qText" class="glow">Will you be my Valentine? 💘</h1>
-  <button id="yes">Yes 💗</button>
-  <button id="no">No 😢</button>
+  <div class="card">
+    <h1 id="qText" class="glow">Will you be my Valentine? 💘</h1>
+    <button id="yes">Yes 💗</button>
+    <button id="no">No 😢</button>
+  </div>
 </div>
 
+<!-- celebration -->
 <div class="screen hidden" id="celebrate">
-  <h1 class="glow">She said YES 💞</h1>
-  <div id="typed" style="font-size:26px;margin-top:20px"></div>
+  <div class="card">
+    <h1 class="glow">She said YES 💞</h1>
+    <div id="typed" style="font-size:24px;margin-top:20px"></div>
+  </div>
 </div>
 
 <canvas id="petals"></canvas>
 
-<!-- stable royalty-free music -->
 <audio id="music" loop>
 <source src="https://cdn.pixabay.com/audio/2022/10/25/audio_946d9c4b3c.mp3">
 </audio>
@@ -95,7 +121,8 @@ const question=document.getElementById("question");
 const celebrate=document.getElementById("celebrate");
 const music=document.getElementById("music");
 
-/* guaranteed music unlock */
+/* intro */
+
 function openIntro(){
   music.volume=0.6;
   music.play().catch(()=>{});
@@ -110,7 +137,14 @@ const yes=document.getElementById("yes");
 const no=document.getElementById("no");
 const qText=document.getElementById("qText");
 
-const msgs=["Are you sure? 🥺","Think again 💔","I'll cry 😢","Please? 💕","Last chance 😳"];
+const msgs=[
+"Are you sure? 🥺",
+"I'll be sad 💔",
+"Please? 💕",
+"Last chance 😳",
+"My heart depends on this 💗"
+];
+
 let step=0;
 
 no.onclick=()=>{
@@ -123,41 +157,46 @@ yes.onclick=()=>{
   question.classList.add("hidden");
   celebrate.classList.remove("hidden");
 
-  confetti({particleCount:300,spread:150});
+  confetti({particleCount:400,spread:180});
 
-  const message="You just unlocked unlimited love mode 💗";
+  const msg="You just unlocked infinite love mode 💘✨";
   let i=0;
   function type(){
-    if(i<message.length){
-      document.getElementById("typed").innerHTML+=message[i++];
+    if(i<msg.length){
+      document.getElementById("typed").innerHTML+=msg[i++];
       setTimeout(type,40);
     }
   }
   type();
 };
 
-/* rose petals */
+/* rose petals engine */
 
 const canvas=document.getElementById("petals");
 const ctx=canvas.getContext("2d");
-canvas.width=innerWidth;
-canvas.height=innerHeight;
+
+function resize(){
+  canvas.width=innerWidth;
+  canvas.height=innerHeight;
+}
+resize();
+onresize=resize;
 
 let petals=[];
-for(let i=0;i<80;i++){
+for(let i=0;i<100;i++){
   petals.push({
     x:Math.random()*canvas.width,
     y:Math.random()*canvas.height,
-    s:Math.random()*10+6,
-    v:Math.random()*1+0.5,
-    drift:Math.random()*2-1
+    r:Math.random()*8+4,
+    v:Math.random()*1+0.3,
+    d:Math.random()*2-1
   });
 }
 
-function petal(p){
+function drawPetal(p){
   ctx.fillStyle="rgba(255,20,120,0.9)";
   ctx.beginPath();
-  ctx.ellipse(p.x,p.y,p.s,p.s*0.6,Math.PI/4,0,Math.PI*2);
+  ctx.ellipse(p.x,p.y,p.r,p.r*0.6,Math.PI/4,0,Math.PI*2);
   ctx.fill();
 }
 
@@ -165,19 +204,14 @@ function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   petals.forEach(p=>{
     p.y+=p.v;
-    p.x+=p.drift;
+    p.x+=p.d;
     if(p.y>canvas.height)p.y=0;
     if(p.x>canvas.width)p.x=0;
-    petal(p);
+    drawPetal(p);
   });
   requestAnimationFrame(animate);
 }
 animate();
-
-onresize=()=>{
-  canvas.width=innerWidth;
-  canvas.height=innerHeight;
-};
 </script>
 
 </body>
