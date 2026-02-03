@@ -11,18 +11,18 @@
 body{
   height:100vh;
   overflow:hidden;
-  background:#120012;
+  background:linear-gradient(135deg,#ff9acb,#ff5fa2,#ff2f7f);
   display:flex;
   justify-content:center;
   align-items:center;
   color:white;
 }
 
-/* neon glow aesthetic */
+/* neon pink glow */
 
 .glow{
   text-shadow:
-  0 0 10px #ff2f7f,
+  0 0 10px #fff,
   0 0 20px #ff2f7f,
   0 0 40px #ff2f7f;
 }
@@ -50,15 +50,13 @@ button{
   cursor:pointer;
   font-weight:bold;
   margin:10px;
-  background:#ff2f7f;
-  color:white;
-  box-shadow:0 0 20px #ff2f7f;
+  background:white;
+  color:#ff2f7f;
+  box-shadow:0 0 20px #fff;
   transition:.3s;
 }
 
 button:hover{transform:scale(1.1);}
-
-#yes{background:white;color:#ff2f7f}
 
 canvas{position:fixed;inset:0;pointer-events:none}
 </style>
@@ -66,48 +64,46 @@ canvas{position:fixed;inset:0;pointer-events:none}
 
 <body>
 
-<!-- intro -->
 <div class="screen" id="intro">
   <h1 class="glow">Tap to open message 💌</h1>
   <button onclick="openIntro()">Open</button>
 </div>
 
-<!-- question -->
 <div class="screen hidden" id="question">
   <h1 id="qText" class="glow">Will you be my Valentine? 💘</h1>
   <button id="yes">Yes 💗</button>
   <button id="no">No 😢</button>
 </div>
 
-<!-- celebration -->
 <div class="screen hidden" id="celebrate">
-  <h1 class="glow">YAAAAAY 💘</h1>
+  <h1 class="glow">She said YES 💞</h1>
   <div id="typed" style="font-size:26px;margin-top:20px"></div>
 </div>
 
 <canvas id="petals"></canvas>
 
+<!-- stable royalty-free music -->
 <audio id="music" loop>
-<source src="https://cdn.pixabay.com/download/audio/2023/03/30/audio_8c8e2e9b6e.mp3">
+<source src="https://cdn.pixabay.com/audio/2022/10/25/audio_946d9c4b3c.mp3">
 </audio>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
-const intro = document.getElementById("intro");
-const question = document.getElementById("question");
-const celebrate = document.getElementById("celebrate");
-const music = document.getElementById("music");
+const intro=document.getElementById("intro");
+const question=document.getElementById("question");
+const celebrate=document.getElementById("celebrate");
+const music=document.getElementById("music");
 
-/* intro reveal + guaranteed music unlock */
-
+/* guaranteed music unlock */
 function openIntro(){
-  music.play().catch(()=>{}); // unlock audio
+  music.volume=0.6;
+  music.play().catch(()=>{});
   intro.classList.add("hidden");
   question.classList.remove("hidden");
 }
 
-/* growing yes mechanic */
+/* growing yes */
 
 let scale=1;
 const yes=document.getElementById("yes");
@@ -118,12 +114,10 @@ const msgs=["Are you sure? 🥺","Think again 💔","I'll cry 😢","Please? �
 let step=0;
 
 no.onclick=()=>{
-  scale+=0.3;
+  scale+=0.35;
   yes.style.transform=`scale(${scale})`;
   if(step<msgs.length) qText.innerText=msgs[step++];
 };
-
-/* celebration */
 
 yes.onclick=()=>{
   question.classList.add("hidden");
@@ -131,7 +125,7 @@ yes.onclick=()=>{
 
   confetti({particleCount:300,spread:150});
 
-  const message="You just made my heart glow brighter than neon 💗";
+  const message="You just unlocked unlimited love mode 💗";
   let i=0;
   function type(){
     if(i<message.length){
@@ -142,7 +136,7 @@ yes.onclick=()=>{
   type();
 };
 
-/* falling heart petals */
+/* rose petals */
 
 const canvas=document.getElementById("petals");
 const ctx=canvas.getContext("2d");
@@ -150,21 +144,20 @@ canvas.width=innerWidth;
 canvas.height=innerHeight;
 
 let petals=[];
-for(let i=0;i<60;i++){
+for(let i=0;i<80;i++){
   petals.push({
     x:Math.random()*canvas.width,
     y:Math.random()*canvas.height,
-    s:Math.random()*8+4,
-    v:Math.random()*1+0.5
+    s:Math.random()*10+6,
+    v:Math.random()*1+0.5,
+    drift:Math.random()*2-1
   });
 }
 
-function heart(x,y,s){
-  ctx.fillStyle="rgba(255,100,150,0.6)";
+function petal(p){
+  ctx.fillStyle="rgba(255,20,120,0.9)";
   ctx.beginPath();
-  ctx.moveTo(x,y);
-  ctx.bezierCurveTo(x-s,y-s,x-2*s,y+s,x,y+2*s);
-  ctx.bezierCurveTo(x+2*s,y+s,x+s,y-s,x,y);
+  ctx.ellipse(p.x,p.y,p.s,p.s*0.6,Math.PI/4,0,Math.PI*2);
   ctx.fill();
 }
 
@@ -172,12 +165,13 @@ function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   petals.forEach(p=>{
     p.y+=p.v;
+    p.x+=p.drift;
     if(p.y>canvas.height)p.y=0;
-    heart(p.x,p.y,p.s);
+    if(p.x>canvas.width)p.x=0;
+    petal(p);
   });
   requestAnimationFrame(animate);
 }
-
 animate();
 
 onresize=()=>{
