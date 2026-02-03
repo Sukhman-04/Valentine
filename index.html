@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Be My Valentine 💘</title>
+<title>Valentine 💘</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
@@ -11,41 +11,27 @@
 body{
   height:100vh;
   overflow:hidden;
-  background:linear-gradient(270deg,#ff9ac6,#ff2f7f,#ff6fa5);
-  background-size:600% 600%;
-  animation:bg 12s ease infinite;
+  background:radial-gradient(circle,#ff6fa5,#ff2f7f);
+  color:white;
   display:flex;
   justify-content:center;
   align-items:center;
-  color:white;
 }
 
-@keyframes bg{
-  0%{background-position:0% 50%;}
-  50%{background-position:100% 50%;}
-  100%{background-position:0% 50%;}
-}
-
-/* glass card */
-
-.card{
-  backdrop-filter:blur(20px);
-  background:rgba(255,255,255,0.15);
-  border-radius:30px;
-  padding:50px;
+.screen{
+  position:absolute;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
   text-align:center;
-  box-shadow:0 20px 60px rgba(0,0,0,0.3);
-  max-width:520px;
-  z-index:2;
+  transition:1s;
 }
 
-h1{
-  font-size:36px;
-  margin-bottom:20px;
-  transition:.4s;
-}
+.hidden{opacity:0;pointer-events:none;}
 
-.buttons{margin-top:30px;}
+h1{font-size:40px;margin-bottom:20px;}
 
 button{
   padding:15px 30px;
@@ -54,8 +40,8 @@ button{
   border-radius:14px;
   cursor:pointer;
   font-weight:bold;
-  transition:.3s;
   margin:10px;
+  transition:.3s;
 }
 
 #yes{background:white;color:#ff2f7f;}
@@ -63,69 +49,53 @@ button{
 
 button:hover{transform:scale(1.1);}
 
-/* celebration overlay */
-
-.celebrate{
-  position:fixed;
-  inset:0;
-  background:#ff2f7f;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-  text-align:center;
-  animation:fade 1s forwards;
-  opacity:0;
-  z-index:5;
-}
-
-@keyframes fade{to{opacity:1;}}
-
-.typed{
-  font-size:28px;
-  margin-top:20px;
-  width:80%;
-  max-width:600px;
-}
-
-/* canvas layers */
-
-canvas{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-}
-
-#hearts{z-index:1;}
-#cursor{z-index:4;}
+canvas{position:fixed;inset:0;pointer-events:none;}
 </style>
 </head>
 
 <body>
 
-<canvas id="hearts"></canvas>
-<canvas id="cursor"></canvas>
-
-<div class="card">
-  <h1 id="text">Will you be my Valentine? 💘</h1>
-
-  <div class="buttons">
-    <button id="yes">Yes 💗</button>
-    <button id="no">No 😢</button>
-  </div>
-
-  <button id="musicBtn" style="margin-top:20px;background:white;color:#ff2f7f;">
-    🎵 Music
-  </button>
+<!-- intro screen -->
+<div class="screen" id="intro">
+  <h1>Tap to open 💌</h1>
+  <button onclick="openMessage()">Open</button>
 </div>
 
+<!-- question screen -->
+<div class="screen hidden" id="question">
+  <h1 id="text">Will you be my Valentine? 💘</h1>
+  <button id="yes">Yes 💗</button>
+  <button id="no">No 😢</button>
+</div>
+
+<!-- celebration -->
+<div class="screen hidden" id="celebrate">
+  <h1>YAAAAAY 💘</h1>
+  <div id="typed"></div>
+</div>
+
+<canvas id="petals"></canvas>
+
 <audio id="music" loop>
-  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_2b6bd6c1f6.mp3?filename=romantic-ambient-110706.mp3">
+<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_2b6bd6c1f6.mp3">
 </audio>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
+const intro=document.getElementById("intro");
+const question=document.getElementById("question");
+const celebrate=document.getElementById("celebrate");
+const music=document.getElementById("music");
+
+/* open intro */
+
+function openMessage(){
+  intro.classList.add("hidden");
+  question.classList.remove("hidden");
+  music.play(); // user interaction → allowed
+}
+
 /* growing yes */
 
 let scale=1;
@@ -133,101 +103,67 @@ const yes=document.getElementById("yes");
 const no=document.getElementById("no");
 const text=document.getElementById("text");
 
-const msgs=["Are you sure? 🥺","Think again… 💔","I’ll be sad… 😢","Please? 💕","Last chance 😳"];
+const msgs=["Are you sure? 🥺","Think again… 💔","I’ll cry 😢","Please? 💕"];
 let step=0;
 
 no.onclick=()=>{
   scale+=0.25;
   yes.style.transform=`scale(${scale})`;
-  if(step<msgs.length){text.innerText=msgs[step++];}
+  if(step<msgs.length)text.innerText=msgs[step++];
 };
 
-/* typed celebration */
+/* celebration */
 
 yes.onclick=()=>{
-  confetti({particleCount:200,spread:120});
-  const screen=document.createElement("div");
-  screen.className="celebrate";
-  screen.innerHTML=`<div style="font-size:50px;">YAAAAAY 💘</div><div class="typed" id="typed"></div>`;
-  document.body.appendChild(screen);
+  question.classList.add("hidden");
+  celebrate.classList.remove("hidden");
+  confetti({particleCount:250,spread:140});
 
-  const message="You just made me the happiest person alive 💗 Thank you for being my Valentine.";
+  const msg="You just made my heart explode with happiness 💗";
   let i=0;
   function type(){
-    if(i<message.length){
-      document.getElementById("typed").innerHTML+=message[i++];
+    if(i<msg.length){
+      document.getElementById("typed").innerHTML+=msg[i++];
       setTimeout(type,40);
     }
   }
   type();
 };
 
-/* music toggle */
+/* falling petals */
 
-const music=document.getElementById("music");
-document.getElementById("musicBtn").onclick=()=>{
-  if(music.paused){music.play();}
-  else{music.pause();}
-};
+const canvas=document.getElementById("petals");
+const ctx=canvas.getContext("2d");
+canvas.width=innerWidth;
+canvas.height=innerHeight;
 
-/* floating hearts */
-
-const hc=document.getElementById("hearts");
-const hctx=hc.getContext("2d");
-hc.width=innerWidth;hc.height=innerHeight;
-
-let hearts=[];
-for(let i=0;i<70;i++){
-  hearts.push({x:Math.random()*hc.width,y:Math.random()*hc.height,s:Math.random()*6+4,v:Math.random()+0.5});
-}
-
-function drawHeart(x,y,s){
-  hctx.fillStyle="rgba(255,255,255,0.5)";
-  hctx.beginPath();
-  hctx.moveTo(x,y);
-  hctx.bezierCurveTo(x-s,y-s,x-2*s,y+s,x,y+2*s);
-  hctx.bezierCurveTo(x+2*s,y+s,x+s,y-s,x,y);
-  hctx.fill();
-}
-
-function animHearts(){
-  hctx.clearRect(0,0,hc.width,hc.height);
-  hearts.forEach(h=>{
-    h.y-=h.v;
-    if(h.y<0)h.y=hc.height;
-    drawHeart(h.x,h.y,h.s);
+let petals=[];
+for(let i=0;i<50;i++){
+  petals.push({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    s:Math.random()*6+3,
+    v:Math.random()*1+0.5
   });
-  requestAnimationFrame(animHearts);
 }
-animHearts();
 
-/* cursor glow */
-
-const cc=document.getElementById("cursor");
-const cctx=cc.getContext("2d");
-cc.width=innerWidth;cc.height=innerHeight;
-
-let trail=[];
-document.onmousemove=e=>{
-  trail.push({x:e.clientX,y:e.clientY});
-  if(trail.length>20)trail.shift();
-};
-
-function animCursor(){
-  cctx.clearRect(0,0,cc.width,cc.height);
-  trail.forEach((p,i)=>{
-    cctx.beginPath();
-    cctx.arc(p.x,p.y,8-i/2,0,Math.PI*2);
-    cctx.fillStyle=`rgba(255,255,255,${1-i/20})`;
-    cctx.fill();
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  petals.forEach(p=>{
+    ctx.fillStyle="rgba(255,255,255,0.6)";
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.s,0,Math.PI*2);
+    ctx.fill();
+    p.y+=p.v;
+    if(p.y>canvas.height)p.y=0;
   });
-  requestAnimationFrame(animCursor);
+  requestAnimationFrame(draw);
 }
-animCursor();
+draw();
 
 onresize=()=>{
-  hc.width=cc.width=innerWidth;
-  hc.height=cc.height=innerHeight;
+  canvas.width=innerWidth;
+  canvas.height=innerHeight;
 };
 </script>
 
