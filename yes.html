@@ -1,19 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Yay!</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<title>Yay 💘</title>
+<link rel="stylesheet" href="style.css">
 </head>
 
-<body>
-  <div class="container">
-    <h1 class="header_text">Yaaay!! 💘</h1>
-    <p class="text">Best Valentine ever 💗</p>
+<body class="celebrate">
 
-    <div class="gif_container">
-      <img src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif" alt="happy gif" />
-    </div>
+<div class="container">
+  <h1 class="header_text">YAAAAAY!!! 💘💘💘</h1>
+  <p class="text">Best Valentine ever 💗</p>
+
+  <div class="gif_container">
+    <img src="https://media.tenor.com/9J8G6K5lJ5YAAAAC/love-bear.gif">
   </div>
+</div>
+
+<canvas id="confetti"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script>
+confetti({
+  particleCount: 200,
+  spread: 120,
+  origin: { y: 0.6 }
+});
+</script>
+
 </body>
 </html>
