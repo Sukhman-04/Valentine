@@ -11,7 +11,7 @@
 body{
   height:100vh;
   overflow:hidden;
-  background:radial-gradient(circle at top, #ff9ac6, #ff2f7f);
+  background:linear-gradient(135deg,#ff9acb,#ff5fa2,#ff2f7f);
   display:flex;
   justify-content:center;
   align-items:center;
@@ -160,7 +160,7 @@ for(let i=0;i<60;i++){
 }
 
 function heart(x,y,s){
-  ctx.fillStyle="rgba(255,255,255,0.5)";
+  ctx.fillStyle="rgba(255,20,120,0.9)";
   ctx.beginPath();
   ctx.moveTo(x,y);
   ctx.bezierCurveTo(x-s,y-s,x-2*s,y+s,x,y+2*s);
